@@ -6,7 +6,7 @@
   "author": "abdumamdouh <eabdogfx@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --watch './**/*.ts' --exec 'ts-node' ./src/index.ts",
+    "start": "nodemon --watch './**/*.ts' --exec \"ts-node\" ./src/index.ts",
     "build": "npx tsc",
     "start:prod": "npm run build && node dist/index.js"
   },
