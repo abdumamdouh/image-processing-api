@@ -1,0 +1,8 @@
+{
+  "name": "image-processing-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/abdumamdouh/image-processing-api",
+  "author": "abdumamdouh <eabdogfx@gmail.com>",
+  "license": "MIT"
+}
