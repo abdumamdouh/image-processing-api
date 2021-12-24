@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/abdumamdouh/image-processing-api",
   "author": "abdumamdouh <eabdogfx@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
 }
