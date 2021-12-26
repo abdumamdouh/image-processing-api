@@ -2,9 +2,10 @@ import express from 'express';
 import { Application, Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import morgan from 'morgan';
-import loggerMiddleware from './middleware/loggerMiddleware';
+//import loggerMiddleware from './middleware/loggerMiddleware';
+import routes from './router';
 
-// the enviorment variable
+// the environment variable
 dotenv.config();
 
 //set the Port variable to the value from the .env file or 5000
@@ -21,12 +22,9 @@ const app: Application = express();
 // you can comment this and use the custom middleware
 app.use(morgan('dev'));
 
-// add routing for / path
-app.get('/', (reqest: Request, response: Response) => {
-    response.json({
-        message: 'Hello World !🌍',
-    });
-});
+// add the index of the routes as a middleware to use to '/' route
+
+app.use('/', routes);
 
 // start express server
 app.listen(Port, () => {
