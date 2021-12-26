@@ -32,6 +32,7 @@
         "jasmine": "^3.10.0",
         "jasmine-spec-reporter": "^7.0.0",
         "morgan": "^1.10.0",
+        "sharp": "^0.29.3",
         "supertest": "^6.1.6"
     }
 }
