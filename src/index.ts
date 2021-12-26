@@ -8,8 +8,8 @@ import routes from './router';
 // the environment variable
 dotenv.config();
 
-//set the Port variable to the value from the .env file or 5000
-const Port = process.env.PORT || 5000;
+//set the Port variable to the value from the .env file or 3000
+const Port = process.env.PORT || 3000;
 
 // the app instance of the server
 const app: Application = express();
