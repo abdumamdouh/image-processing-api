@@ -10,69 +10,77 @@ import resizeImg from '../../utils/handleImage';
 
 const resize = express.Router();
 
-resize.get('/', async (reqest: express.Request, response: express.Response) => {
-    // get the query object
-    const query = reqest.query;
-    // get the query parmeters
-    const { filename, width, height } = query;
+resize.get(
+    '/',
+    async (request: express.Request, response: express.Response) => {
+        // get the query object
+        const query = request.query;
+        // get the query parameters
+        const { filename, width, height } = query;
 
-    // <projectName>\assets
-    const imageDirectory = path.resolve('./') + '/assets/';
+        // <projectName>\assets
+        const imageDirectory = path.resolve('./') + '/assets/';
 
-    // <projectName>\assets\thumbnails
-    const outputDirectory = imageDirectory + 'thumbnails/';
+        // <projectName>\assets\thumbnails
+        const outputDirectory = imageDirectory + 'thumbnails/';
 
-    // <projectName>\assets\thumbnails\<imageName>.jpg or any other extension
-    const targetImage = `${imageDirectory}${filename}.jpg`;
+        // <projectName>\assets\thumbnails\<imageName>.jpg or any other extension
+        const targetImage = `${imageDirectory}${filename}.jpg`;
 
-    if (Object.keys(reqest.query).length === 0) {
-        return response
-            .status(200)
-            .send(
-                'Welcome to the conversion endpoint. An image filname, height and width are required parameters.'
+        //return status code 200 and welcome message in case there is no query parameters just the api only
+        if (Object.keys(request.query).length === 0) {
+            return response
+                .status(200)
+                .send(
+                    'Welcome to the resize endpoint. you can add the image filename, height and width in the query parameters.'
+                );
+        }
+
+        // validation for the incoming inputs
+        if (
+            !filename ||
+            !width ||
+            !height ||
+            isNaN(Number(width)) ||
+            isNaN(Number(height))
+        ) {
+            return response
+                .status(400)
+                .send('Error, some parameter is missing!');
+        }
+
+        if (typeChecker(String(filename))) {
+            return response
+                .status(400)
+                .send('Lookout, add the filename without the extension.');
+        }
+
+        if (!fileExists(targetImage)) {
+            return response.status(404).send('404,image not found!');
+        }
+
+        if (!fileExists(outputDirectory)) {
+            createDirectory(outputDirectory);
+        }
+
+        // the output directory of the image
+        // example: the input image called img.jpg
+        //the output will be img-thumb-600x350.jpg
+        const outputImage =
+            outputDirectory + `${filename}-thumb-${width}x${height}.jpg`;
+
+        //catching, checking if the image is exist or not
+        if (fileExists(outputImage)) response.sendFile(outputImage);
+        else {
+            await resizeImg(
+                targetImage,
+                outputImage,
+                Number(width),
+                Number(height)
             );
+            response.sendFile(outputImage);
+        }
     }
-
-    if (
-        !filename ||
-        !width ||
-        !height ||
-        isNaN(Number(width)) ||
-        isNaN(Number(height))
-    ) {
-        return response
-            .status(400)
-            .send('Error, missing or malformed parameters');
-    }
-
-    if (typeChecker(String(filename))) {
-        return response
-            .status(400)
-            .send("Filename shouldn't include the extension");
-    }
-
-    if (!fileExists(targetImage)) {
-        return response.status(404).send('Oh uh, image not found');
-    }
-
-    if (!fileExists(outputDirectory)) {
-        createDirectory(outputDirectory);
-    }
-
-    const outputImage =
-        outputDirectory + `${filename}-thumbnail-${width}x${height}.jpg`; // ex: pic.jpg => pic-thumbnail-500x400.jpg
-    if (fileExists(outputImage)) {
-        // Caching system
-        response.sendFile(outputImage);
-    } else {
-        await resizeImg(
-            targetImage,
-            outputImage,
-            Number(width),
-            Number(height)
-        );
-        response.sendFile(outputImage);
-    }
-});
+);
 
 export default resize;
